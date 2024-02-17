@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<ruleset name="WordPress-Plugin" >
+    <file>src</file>
+    <file>wp-ai-integration.php</file>
+    <rule ref="WordPress" >
+        <exclude name="Squiz.Commenting.FileComment.Missing" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+    </rule>
+    <exclude-pattern>*.(js|css)</exclude-pattern>
+</ruleset>

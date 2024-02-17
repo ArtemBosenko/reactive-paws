@@ -30,12 +30,12 @@
  */
 
 // Make sure we don't expose any info if called directly
-if ( !function_exists( 'add_action' ) ) {
-    echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
-    exit;
+if ( ! function_exists( 'add_action' ) ) {
+	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
+	exit;
 }
 
-require_once( plugin_dir_path( __FILE__ ) . 'src/Plugin/Plugin.php' );
+require_once plugin_dir_path( __FILE__ ) . 'src/Plugin/Plugin.php';
 WpAiIntegration\Plugin\Plugin::get_instance();
 
 
