@@ -2,6 +2,10 @@
 
 namespace WpAiIntegration\Plugin;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use WpAiIntegration\Admin\Page;
+
 /**
  * The Plugin class.
  */
@@ -46,8 +50,15 @@ class Plugin {
      * @return void
      */
     protected function init(): void {
-        self::$plugin_dir = empty( self::$plugin_dir ) ? plugin_dir_path(dirname(dirname(__FILE__))) : self::$plugin_dir;
+        self::$plugin_dir = empty( self::$plugin_dir ) ?
+            plugin_dir_path( dirname( dirname(__FILE__ ) ) ) :
+            self::$plugin_dir;
         self::$plugin_file = empty( self::$plugin_file ) ? self::$plugin_dir . basename( self::$plugin_dir ) . '.php' : self::$plugin_file;
+
+        $this->autoload_src( self::get_plugin_dir() . 'src' );
+
+//        TODO: make factory
+        new Page( __( 'WP AI integration', 'wp-ai-integration' ) , 'wp-ai-integration-start-page' );
 
         add_action(
             'init',
@@ -96,9 +107,22 @@ class Plugin {
      * @param $domain
      * @return void
      */
-    public static function set_plugin_textdomain($domain ): void
+    public static function set_plugin_textdomain( $domain ): void
     {
         self::$plugin_textdomain = $domain;
+    }
+
+    public function autoload_src( $directory ) {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ( $iterator as $filename ) {
+            if ( pathinfo($filename, PATHINFO_EXTENSION) === "php" && $filename->getPathname() !== __FILE__ ) {
+                require_once $filename;
+            }
+        }
     }
 
     /**
@@ -124,8 +148,5 @@ class Plugin {
     public function __wakeup(){
         throw new \Exception("Cannot unserialize a singleton.");
     }
-
-
-
 
 }
